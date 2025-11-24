@@ -4,18 +4,27 @@ from pydantic import BaseModel
 import openai
 import os
 import time
+from typing import Optional
+
 
 # Get the API key from environment variables
 api_key = os.environ.get("OPENAI_API_KEY")
 if not api_key:
     raise ValueError("A variável de ambiente OPENAI_API_KEY não foi definida.")
 
+# Get the Assistant ID from environment variables
+default_assistant_id = os.environ.get("ASSISTANT_ID")
+
 client = openai.OpenAI(api_key=api_key)
 app = FastAPI()
 
+# Mount static files
+from fastapi.staticfiles import StaticFiles
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
 class ChatRequest(BaseModel):
-    session_id: str | None = None  # session_id is optional
-    assistant_id: str
+    session_id: Optional[str] = None  # session_id is optional
+    assistant_id: Optional[str] = None # assistant_id is optional if env var is set
     message: str
     assunto: str
     objetivo: str
@@ -35,6 +44,11 @@ def chat_with_assistant(request: ChatRequest):
     5. Returns the assistant's latest response.
     """
     try:
+        # Determine assistant_id
+        assistant_id = request.assistant_id or default_assistant_id
+        if not assistant_id:
+             return {"error": "Assistant ID not provided and ASSISTANT_ID env var not set."}
+
         # Step 1: Create a new thread or use the existing one
         thread_id = request.session_id
         if thread_id is None:
@@ -51,7 +65,7 @@ def chat_with_assistant(request: ChatRequest):
         # Step 3: Run the assistant
         run = client.beta.threads.runs.create(
             thread_id=thread_id,
-            assistant_id=request.assistant_id,
+            assistant_id=assistant_id,
             additional_instructions=f"Assunto: {request.assunto}. Objetivo: {request.objetivo}"
         )
 
