@@ -66,6 +66,9 @@ def chat_with_assistant(request: ChatRequest):
             # The latest message is from the assistant
             assistant_message = messages.data[0].content[0].text.value
 
+            # Replace double quotes with single quotes to prevent JSON breaking
+            assistant_message = assistant_message.replace('"', "'")
+
             return {
                 "response": assistant_message,
                 "session_id": thread_id # Return session_id for subsequent requests
