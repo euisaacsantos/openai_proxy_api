@@ -17,6 +17,8 @@ class ChatRequest(BaseModel):
     session_id: str | None = None  # session_id is optional
     assistant_id: str
     message: str
+    assunto: str
+    objetivo: str
 
 @app.get("/")
 def read_root():
@@ -50,6 +52,7 @@ def chat_with_assistant(request: ChatRequest):
         run = client.beta.threads.runs.create(
             thread_id=thread_id,
             assistant_id=request.assistant_id,
+            additional_instructions=f"Assunto: {request.assunto}. Objetivo: {request.objetivo}"
         )
 
         # Step 4: Wait for the run to complete
