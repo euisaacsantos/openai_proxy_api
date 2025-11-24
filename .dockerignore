@@ -1,0 +1,51 @@
+# Git
+.git
+.gitignore
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+
+# Virtual environments
+venv/
+env/
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+.claude/
+
+# Testing
+.pytest_cache/
+*.coverage
+htmlcov/
+
+# Environment variables
+.env
+.env.*
+
+# Vercel specific (não necessário no Fly.io)
+vercel.json
+.vercel
+
+# Test files
+test_json.py
+test_*.py
+*.test.py
+
+# Temporary files
+*.log
+*.tmp
+/tmp/

@@ -1,0 +1,60 @@
+# fly.toml app configuration file
+# See https://fly.io/docs/reference/configuration/ for more information
+
+app = "openai-proxy-api"
+primary_region = "gru"  # São Paulo, Brazil - change if needed
+
+[build]
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+
+  # HTTP request timeout (60 seconds)
+  [http_service.timeouts]
+    hard_timeout = "60s"
+    idle_timeout = "30s"
+
+[[vm]]
+  cpu_kind = "shared"
+  cpus = 1
+  memory_mb = 256
+
+[env]
+  # Environment variables (add OPENAI_API_KEY via: flyctl secrets set OPENAI_API_KEY=your_key)
+
+[[services]]
+  protocol = "tcp"
+  internal_port = 8080
+
+  [[services.ports]]
+    port = 80
+    handlers = ["http"]
+    force_https = true
+
+  [[services.ports]]
+    port = 443
+    handlers = ["tls", "http"]
+
+  [services.concurrency]
+    type = "connections"
+    hard_limit = 25
+    soft_limit = 20
+
+  [[services.tcp_checks]]
+    interval = "15s"
+    timeout = "2s"
+    grace_period = "10s"
+    restart_limit = 0
+
+  [[services.http_checks]]
+    interval = "10s"
+    timeout = "5s"
+    grace_period = "10s"
+    method = "get"
+    path = "/"
+    protocol = "http"
+    restart_limit = 0

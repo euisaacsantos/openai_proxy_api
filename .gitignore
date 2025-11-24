@@ -31,3 +31,7 @@ MANIFEST
 # Local environment variables
 .env
 .env.*
+
+# Fly.io
+.fly/
+fly.toml.backup
