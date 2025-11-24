@@ -72,8 +72,15 @@ def chat_with_assistant(request: ChatRequest):
             assistant_message = assistant_message.replace('\u201d', "'")  # Right curly quote "
 
             return {
-                "response": assistant_message,
-                "session_id": thread_id # Return session_id for subsequent requests
+                "version": "v2",
+                "content": {
+                    "messages": [
+                        {
+                            "type": "text",
+                            "text": assistant_message
+                        }
+                    ]
+                }
             }
         else:
             return {"error": f"Run failed with status: {run.status}"}
