@@ -66,8 +66,10 @@ def chat_with_assistant(request: ChatRequest):
             # The latest message is from the assistant
             assistant_message = messages.data[0].content[0].text.value
 
-            # Replace double quotes with single quotes to prevent JSON breaking
-            assistant_message = assistant_message.replace('"', "'")
+            # Replace all types of quotes with single quotes for ManyChat compatibility
+            assistant_message = assistant_message.replace('"', "'")  # Straight double quotes
+            assistant_message = assistant_message.replace('"', "'")  # Left curly quote
+            assistant_message = assistant_message.replace('"', "'")  # Right curly quote
 
             return {
                 "response": assistant_message,
