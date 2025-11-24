@@ -68,8 +68,8 @@ def chat_with_assistant(request: ChatRequest):
 
             # Replace all types of quotes with single quotes for ManyChat compatibility
             assistant_message = assistant_message.replace('"', "'")  # Straight double quotes
-            assistant_message = assistant_message.replace('"', "'")  # Left curly quote
-            assistant_message = assistant_message.replace('"', "'")  # Right curly quote
+            assistant_message = assistant_message.replace('\u201c', "'")  # Left curly quote "
+            assistant_message = assistant_message.replace('\u201d', "'")  # Right curly quote "
 
             return {
                 "response": assistant_message,
